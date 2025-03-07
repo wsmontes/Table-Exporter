@@ -2,9 +2,8 @@
   "manifest_version": 3,
   "name": "Table Exporter Pro",
   "version": "1.0",
-  "description": "Detect and export tables from any webpage to Excel or CSV formats",
-  "permissions": ["activeTab", "storage", "downloads"],
-  "host_permissions": ["<all_urls>"],
+  "description": "Easily extract tables from any webpage to Excel or CSV formats with a single click",
+  "permissions": ["activeTab", "downloads"],
   "action": {
     "default_popup": "popup.html",
     "default_icon": {

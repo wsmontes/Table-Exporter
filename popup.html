@@ -42,45 +42,19 @@
         <div class="export-format">
           <label>Format:</label>
           <div class="format-options">
-            <button id="export-csv" class="btn-format active">CSV</button>
-            <button id="export-excel" class="btn-format">XLSX</button>
+            <button id="export-csv" class="btn-format">CSV</button>
+            <button id="export-excel" class="btn-format active">XLSX</button>
           </div>
         </div>
         
         <button id="export-selected" class="btn-primary" disabled>Export Selected</button>
         <button id="export-all" class="btn-primary">Export All Tables</button>
-        
-        <!-- Debug section with better styling -->
-        <div id="debug-section">
-          <div class="section-header">
-            <h2>Troubleshooting</h2>
-          </div>
-          <button id="debug-download" class="btn-secondary">Test Simple Download</button>
-          <div id="debug-info"></div>
-        </div>
       </div>
     </div>
   </div>
   
   <script src="popup.js"></script>
+  <!-- Keep debug.js loaded but hidden functionality -->
   <script src="debug.js"></script>
-  <script>
-    // Connect debug button with improved handling
-    document.getElementById('debug-download')?.addEventListener('click', function() {
-      if (typeof window.testDownload === 'function') {
-        this.disabled = true;
-        document.getElementById('debug-info').textContent = 'Initiating test download...';
-        
-        const result = window.testDownload();
-        
-        setTimeout(() => {
-          this.disabled = false;
-        }, 1000);
-      } else {
-        document.getElementById('debug-info').textContent = 
-          'Debug function not found. Please check console for errors.';
-      }
-    });
-  </script>
 </body>
 </html>

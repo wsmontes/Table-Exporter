@@ -1,7 +1,7 @@
 // Variables to keep track of state
 let detectedTables = [];
 let selectedTableIndex = -1;
-let exportFormat = 'csv';
+let exportFormat = 'excel'; // Changed from 'csv' to 'excel'
 
 // DOM elements
 const loadingEl = document.getElementById('loading');
@@ -20,6 +20,10 @@ const exportExcelBtn = document.getElementById('export-excel');
 document.addEventListener('DOMContentLoaded', () => {
   detectTables();
   setupEventListeners();
+  
+  // Make sure UI reflects the default export format
+  exportCsvBtn.classList.remove('active');
+  exportExcelBtn.classList.add('active');
 });
 
 // Setup event listeners

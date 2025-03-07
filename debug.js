@@ -1,4 +1,5 @@
-console.log('Debug utilities loaded');
+// Debug utilities kept for possible future use, but not exposed in UI
+console.log('Debug utilities loaded (hidden)');
 
 // Simple direct download test based on the working code from index.html
 function testDownload() {
@@ -71,5 +72,8 @@ function testDirectExport() {
 }
 
 // Add debugging functions to window for console access
+// These can still be used from developer console if needed
 window.testDownload = testDownload;
 window.testDirectExport = testDirectExport;
+
+// Removed DOM event listeners since the UI elements are gone
