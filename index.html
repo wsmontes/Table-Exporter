@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Exportador de Tabelas para CSV</title>
+  <style>
+    .export-btn {
+      margin: 5px 0;
+      padding: 4px 8px;
+      background: #3498db;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      border-radius: 3px;
+    }
+  </style>
+</head>u
+<body>
+  <h1>Exemplo de Tabela</h1>
+  <table border="1">
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>Idade</th>
+        <th>Cidade</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Ana</td>
+        <td>28</td>
+        <td>São Paulo</td>
+      </tr>
+      <tr>
+        <td>Bruno</td>
+        <td>35</td>
+        <td>Rio de Janeiro</td>
+      </tr>
+      <tr>
+        <td>Carla</td>
+        <td>22</td>
+        <td>Belo Horizonte</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <script>
+    // Converte a tabela para CSV
+    function tableToCSV(table) {
+      let csv = [];
+      for (let i = 0; i < table.rows.length; i++) {
+        let row = [];
+        let cols = table.rows[i].cells;
+        for (let j = 0; j < cols.length; j++) {
+          // Limpa aspas duplas e envolve cada célula com aspas
+          let data = cols[j].innerText.replace(/"/g, '""');
+          row.push('"' + data + '"');
+        }
+        csv.push(row.join(","));
+      }
+      return csv.join("\n");
+    }
+
+    // Cria e dispara o download do CSV
+    function downloadCSV(csv, filename) {
+      const blob = new Blob([csv], { type: "text/csv" });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.style.display = "none";
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    }
+
+    // Adiciona um botão de exportação para cada tabela encontrada
+    function addExportButtons() {
+      const tables = document.querySelectorAll("table");
+      tables.forEach((table, index) => {
+        const btn = document.createElement("button");
+        btn.innerText = "Exportar Tabela " + (index + 1) + " para CSV";
+        btn.className = "export-btn";
+        btn.addEventListener("click", () => {
+          const csv = tableToCSV(table);
+          downloadCSV(csv, "tabela" + (index + 1) + ".csv");
+        });
+        // Insere o botão acima da tabela
+        table.parentNode.insertBefore(btn, table);
+      });
+    }
+
+    window.onload = addExportButtons;
+  </script>
+</body>
+</html>
