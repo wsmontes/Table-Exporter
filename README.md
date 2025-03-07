@@ -12,10 +12,8 @@ A powerful Chrome extension that lets you easily extract tables from any webpage
 
 ## Installation
 
-### From Chrome Web Store
-1. Visit the [Chrome Web Store page](https://chrome.google.com/webstore/detail/table-exporter-pro) (link to be added when published)
-2. Click "Add to Chrome"
-3. Confirm the installation
+### Future Chrome Web Store Release
+This extension is not yet published to the Chrome Web Store. When published, you'll be able to install it with just a few clicks.
 
 ### Manual Installation (Developer Mode)
 1. Download or clone this repository

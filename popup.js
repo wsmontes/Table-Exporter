@@ -18,6 +18,11 @@ const exportExcelBtn = document.getElementById('export-excel');
 
 // Initialize the popup
 document.addEventListener('DOMContentLoaded', () => {
+  // Check if XLSX is loaded
+  if (typeof XLSX === 'undefined') {
+    console.warn('XLSX library not loaded. Excel export will fall back to HTML-based export.');
+  }
+  
   detectTables();
   setupEventListeners();
   
