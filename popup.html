@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Table Exporter Pro</title>
+  <link rel="stylesheet" href="styles.css">
+  <!-- Add the xlsx library -->
+  <script src="xlsx.min.js"></script>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Table Exporter Pro</h1>
+      <p class="subtitle">Detect and export tables from any webpage</p>
+    </header>
+    
+    <div id="loading" class="loading">
+      <div class="spinner"></div>
+      <p>Scanning for tables...</p>
+    </div>
+    
+    <div id="no-tables" class="message hidden">
+      <p>No tables found on this page.</p>
+    </div>
+    
+    <div id="tables-container" class="hidden">
+      <div class="section-header">
+        <h2>Tables Found: <span id="table-count">0</span></h2>
+        <button id="refresh-tables" class="btn-secondary">Refresh</button>
+      </div>
+      
+      <div id="tables-list" class="tables-list"></div>
+    </div>
+    
+    <div id="export-options" class="hidden">
+      <div class="section-header">
+        <h2>Export Options</h2>
+      </div>
+      
+      <div class="export-controls">
+        <div class="export-format">
+          <label>Format:</label>
+          <div class="format-options">
+            <button id="export-csv" class="btn-format active">CSV</button>
+            <button id="export-excel" class="btn-format">XLSX</button>
+          </div>
+        </div>
+        
+        <button id="export-selected" class="btn-primary" disabled>Export Selected</button>
+        <button id="export-all" class="btn-primary">Export All Tables</button>
+        
+        <!-- Debug section with better styling -->
+        <div id="debug-section">
+          <div class="section-header">
+            <h2>Troubleshooting</h2>
+          </div>
+          <button id="debug-download" class="btn-secondary">Test Simple Download</button>
+          <div id="debug-info"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script src="popup.js"></script>
+  <script src="debug.js"></script>
+  <script>
+    // Connect debug button with improved handling
+    document.getElementById('debug-download')?.addEventListener('click', function() {
+      if (typeof window.testDownload === 'function') {
+        this.disabled = true;
+        document.getElementById('debug-info').textContent = 'Initiating test download...';
+        
+        const result = window.testDownload();
+        
+        setTimeout(() => {
+          this.disabled = false;
+        }, 1000);
+      } else {
+        document.getElementById('debug-info').textContent = 
+          'Debug function not found. Please check console for errors.';
+      }
+    });
+  </script>
+</body>
+</html>
