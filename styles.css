@@ -231,4 +231,105 @@ button:disabled {
   to { opacity: 1; transform: translate(-50%, 0); }
 }
 
+/* Toggle Switch - Improved version */
+.option-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid #e0e0e0;
+  cursor: pointer;
+}
+
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 20px;
+}
+
+.toggle-switch input {
+  /* Make the input cover the entire toggle area but keep it invisible */
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: 2;
+  cursor: pointer;
+  margin: 0;
+}
+
+.toggle-slider {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+  border-radius: 20px;
+  z-index: 1;
+  cursor: pointer;
+}
+
+.toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+input:checked + .toggle-slider {
+  background-color: #3498db;
+}
+
+input:checked + .toggle-slider:before {
+  transform: translateX(20px);
+}
+
+/* Inline Export Buttons */
+.table-export-btn {
+  position: absolute;
+  top: -20px;
+  right: 0;
+  z-index: 1000;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+  opacity: 0.7;
+}
+
+.table-export-btn:hover {
+  background-color: #2980b9;
+  opacity: 1;
+}
+
+/* Table positioning for buttons */
+table.table-exporter-enabled {
+  position: relative !important;
+}
+
+.table-export-buttons {
+  position: absolute;
+  right: 0;
+  top: -28px;
+  display: flex;
+  gap: 4px;
+}
+
 /* Removed debug section styles */

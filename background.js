@@ -87,6 +87,13 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       console.error('Error in export process:', err);
       sendResponse({ success: false, error: err.message });
     }
+  } 
+  else if (request.action === 'getXLSXUrl') {
+    // Provide the URL to the content script to load XLSX library
+    sendResponse({ 
+      url: chrome.runtime.getURL('xlsx.min.js')
+    });
   }
+  
   return true; // Keep the message channel open for async response
 });

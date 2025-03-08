@@ -2,6 +2,7 @@
 let detectedTables = [];
 let selectedTableIndex = -1;
 let exportFormat = 'excel'; // Changed from 'csv' to 'excel'
+let inlineButtonsEnabled = false; // Default state for inline buttons
 
 // DOM elements
 const loadingEl = document.getElementById('loading');
@@ -15,21 +16,48 @@ const exportAllBtn = document.getElementById('export-all');
 const refreshTablesBtn = document.getElementById('refresh-tables');
 const exportCsvBtn = document.getElementById('export-csv');
 const exportExcelBtn = document.getElementById('export-excel');
+const inlineButtonsToggle = document.getElementById('inline-buttons-toggle');
 
 // Initialize the popup
 document.addEventListener('DOMContentLoaded', () => {
-  // Check if XLSX is loaded
-  if (typeof XLSX === 'undefined') {
-    console.warn('XLSX library not loaded. Excel export will fall back to HTML-based export.');
-  }
-  
-  detectTables();
-  setupEventListeners();
-  
-  // Make sure UI reflects the default export format
-  exportCsvBtn.classList.remove('active');
-  exportExcelBtn.classList.add('active');
+  // Load saved settings
+  loadSettings().then(() => {
+    detectTables();
+    setupEventListeners();
+    
+    // Make sure UI reflects the default export format
+    exportCsvBtn.classList.toggle('active', exportFormat === 'csv');
+    exportExcelBtn.classList.toggle('active', exportFormat === 'excel');
+    
+    // Update inline buttons toggle to match saved state
+    inlineButtonsToggle.checked = inlineButtonsEnabled;
+  });
 });
+
+// Load settings from Chrome storage
+function loadSettings() {
+  return new Promise((resolve) => {
+    chrome.storage.sync.get(['exportFormat', 'inlineButtonsEnabled'], (result) => {
+      if (result.exportFormat) {
+        exportFormat = result.exportFormat;
+      }
+      
+      if (result.inlineButtonsEnabled !== undefined) {
+        inlineButtonsEnabled = result.inlineButtonsEnabled;
+      }
+      
+      resolve();
+    });
+  });
+}
+
+// Save settings to Chrome storage
+function saveSettings() {
+  chrome.storage.sync.set({
+    exportFormat: exportFormat,
+    inlineButtonsEnabled: inlineButtonsEnabled
+  });
+}
 
 // Setup event listeners
 function setupEventListeners() {
@@ -50,6 +78,35 @@ function setupEventListeners() {
   });
   
   exportAllBtn.addEventListener('click', exportAllTables);
+  
+  // Improved event listeners for inline buttons toggle
+  inlineButtonsToggle.addEventListener('change', toggleInlineButtonsHandler);
+  
+  // Also make the entire toggle container clickable for better UX
+  document.getElementById('toggle-container').addEventListener('click', (e) => {
+    // Avoid double-triggering when clicking directly on the checkbox
+    if (e.target !== inlineButtonsToggle) {
+      inlineButtonsToggle.checked = !inlineButtonsToggle.checked;
+      toggleInlineButtonsHandler();
+    }
+  });
+}
+
+// Separate handler function for toggling inline buttons
+function toggleInlineButtonsHandler() {
+  inlineButtonsEnabled = inlineButtonsToggle.checked;
+  console.log('Toggle changed to:', inlineButtonsEnabled);
+  saveSettings();
+  
+  // Update content script with the new setting
+  chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
+    if (tabs && tabs[0] && tabs[0].id) {
+      chrome.tabs.sendMessage(tabs[0].id, {
+        action: 'toggleInlineButtons',
+        enabled: inlineButtonsEnabled
+      });
+    }
+  });
 }
 
 // Set the export format and update UI
@@ -58,6 +115,9 @@ function setExportFormat(format) {
   
   exportCsvBtn.classList.toggle('active', format === 'csv');
   exportExcelBtn.classList.toggle('active', format === 'excel');
+  
+  // Save the selected format
+  saveSettings();
 }
 
 // Detect tables in the current tab
@@ -67,7 +127,10 @@ function detectTables() {
   chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
     chrome.tabs.sendMessage(
       tabs[0].id,
-      {action: 'detectTables'},
+      {
+        action: 'detectTables',
+        inlineButtonsEnabled: inlineButtonsEnabled // Pass current setting
+      },
       (response) => {
         if (chrome.runtime.lastError) {
           showNoTables();
